@@ -1,4 +1,4 @@
-const Translations = require("../models/translation");
+const Translations = require("../models/Translation");
 
 exports.getAll = async (req, res) => {
   try {
@@ -93,7 +93,6 @@ exports.update = async (req, res) => {
     await findTranslation.save();
     res.json(findTranslation);
   } catch (err) {
-    console.log(err);
     return res.json(err);
   }
 };

@@ -1,0 +1,54 @@
+uz, ru, en, kr,
+
+Admin
+  Username
+  Password
+  Email
+  Phone
+  Instagram
+  Facebook
+  Telegram
+
+Orders
+  Products*Array
+  Total
+  Username
+  Phone
+
+//Done!
+Achievements
+  Image
+  Description
+
+//Done!
+Comments
+  Description
+  Username
+  Image
+
+//Done!
+Brands
+  Image
+  Url
+
+//Done!
+Products
+  Image
+  Title
+  Description
+  Price
+  Weight
+  Category
+  About*optional
+  Advantages*optional
+
+//Done!
+Product Category
+  Image
+  Category Name
+
+//Done!
+Blog
+  Image
+  Title
+  Description

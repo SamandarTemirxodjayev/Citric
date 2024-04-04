@@ -5,13 +5,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes/router");
 const fs = require("fs");
+const useragent = require('express-useragent');
 const path = require("path");
 require("./backup");
-const video = require("./video");
 const PORT = process.env.PORT || 3001;
 
 const app = express();
 app.use(express.json());
+app.use(useragent.express());
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -20,11 +21,13 @@ mongoose
 
 app.use(cors());
 
-app.post("/", (req, res) => {
-  return res.json({ message: "Server is run!" });
+app.get("/", (req, res) => {
+  const device = req.useragent.isMobile ? (req.useragent.isAndroid ? 'Android' : (req.useragent.isiPhone ? 'iOS' : 'Mobile')) : 'Desktop';
+  return res.json({ 
+    device: device,
+    message: "Server is run!"
+  });
 });
-
-app.get("/video/:video", video);
 
 const logFolder = path.join(__dirname, "log");
 const logFileName = () => {

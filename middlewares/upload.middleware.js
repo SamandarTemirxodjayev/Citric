@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const uploadMiddleware = multer({ storage: storage }).array("image", 5);
+const uploadMiddleware = multer({ storage: storage }).array("images", 5);
 const outputPath = `${process.cwd()}/uploads/`;
 
 const uploadFile = (req, res, next) => {
@@ -21,7 +21,6 @@ const uploadFile = (req, res, next) => {
     if (err instanceof multer.MulterError) {
       return res.status(400).json({ message: "File upload error" });
     } else if (err) {
-      console.log(err);
       return res.status(500).json({ message: "Internal server error" });
     }
     const { format = "webp" } = req.query;
