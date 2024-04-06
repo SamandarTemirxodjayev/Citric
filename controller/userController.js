@@ -10,13 +10,15 @@ exports.getMe = async (req, res) => {
         message: "User Not Found!",
       });
     }
+    findUser.password = null;
     return res.json({
       data: {
-        token: sign(findUser._id),
-        login: findUser.login,
+        token: sign(findUser._id.toString()),
+        ...findUser._doc
       },
     });
   } catch (err) {
+    console.log(err);
     return res.json(err);
   }
 };
@@ -49,14 +51,13 @@ exports.updateUser = async (req, res) => {
     const updatedUser = await Users.findByIdAndUpdate(
       userId,
       {
-        username: req.body.username,
-        password: req.body.password,
+        ...req.body
       },
       {
         new: true,
       }
     );
-    if (updatedUser) {
+    if (!updatedUser) {
       return res.status(404).json({
         message: "User not found!",
       });

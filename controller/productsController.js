@@ -4,13 +4,26 @@ const filterByLangSingle = require("../utils/filterByLangSingle")
 
 exports.getAll = async (req, res) => {
   try {
-    const products = await Products.find()
+    const filterQuery = {}
+    if(req.query.category) {
+      filterQuery.category = req.query.category
+    }
+    const products = await Products.find(filterQuery)
+      .skip((req.query.page - 1) * req.query.perPage)
+      .limit(req.query.perPage);
     const filteredTitle = filterByLang(products, req.query.lang, 'productTitle')
     const filteredAbout = filterByLang(filteredTitle, req.query.lang, 'about')
     const filteredAd = filterByLang(filteredAbout, req.query.lang, 'advantages')
     const filteredDesc = filterByLang(filteredAd, req.query.lang, 'description')
+    const total = await Products.countDocuments();
     return res.json({
-      data: filteredDesc
+      data: filteredDesc,
+      _meta: {
+        currentPage: +req.query.page,
+        perPage: +req.query.perPage,
+        totalCount: total,
+        pageCount: Math.ceil(total / req.query.perPage),
+      },
     })
   } catch (err) {
     return res.status(500).json({
@@ -22,7 +35,7 @@ exports.getAll = async (req, res) => {
 
 exports.findById = async (req, res) => {
   try {
-    const findProduct = await Products.findById(req.params.id);
+    const findProduct = await Products.findById(req.params.id).populate('category');
 
     if (!findProduct) {
       return res.status(404).json({
@@ -47,8 +60,6 @@ exports.findById = async (req, res) => {
   }
 };
 
-
-
 exports.search = async (req, res) => {
   try {
     const regex = new RegExp(req.params.title, 'i');
@@ -69,6 +80,7 @@ exports.search = async (req, res) => {
     });
   }
 }
+
 exports.addProduct = async (req, res) => {
   try {
     const newProduct = new Products({

@@ -3,7 +3,6 @@ const filterByLangForObject = (obj, lang, title) => {
   const field = `${title}${lang}`.trim();
   const newObj = obj._doc ? obj._doc : obj;
   newObj[title] = newObj[field]
-  .log({...newObj});
   return newObj;
 };
 

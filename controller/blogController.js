@@ -4,13 +4,21 @@ const filterByLangSingle = require("../utils/filterByLangSingle");
 
 exports.getAll = async (req, res) => {
   try {
-    const blogs = await Blog.find();
+    const blogs = await Blog.find()
+      .skip((req.query.page - 1) * req.query.perPage)
+      .limit(req.query.perPage);
     const filteredTitle = filterByLang(blogs, req.query.lang, "title");
     const filterDesc = filterByLang(filteredTitle, req.query.lang, "description");
-
+    const total = await Blog.countDocuments();
     return res.status(200).json({
       status: 200,
       data: filterDesc,
+      _meta: {
+        currentPage: +req.query.page,
+        perPage: +req.query.perPage,
+        totalCount: total,
+        pageCount: Math.ceil(total / req.query.perPage),
+      },
     });
   } catch (err) {
     return res.status(500).json({
