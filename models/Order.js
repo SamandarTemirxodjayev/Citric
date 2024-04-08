@@ -18,6 +18,8 @@ const orderSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+}, {
+  timestamps: true
 });
 
 const Order = mongoose.model("Order", orderSchema);
