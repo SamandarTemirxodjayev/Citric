@@ -8,7 +8,7 @@ exports.getAll = async (req, res) => {
     if(req.query.category) {
       filterQuery.category = req.query.category
     }
-    const products = await Products.find(filterQuery)
+    const products = await Products.find(filterQuery).populate('category')
       .skip((req.query.page - 1) * req.query.perPage)
       .limit(req.query.perPage);
     const filteredTitle = filterByLang(products, req.query.lang, 'productTitle')
@@ -43,11 +43,14 @@ exports.findById = async (req, res) => {
       });
     }
 
+    const field = req.query.lang.charAt(0).toUpperCase() + req.query.lang.slice(1).trim()
+
     const filteredTitle = filterByLangSingle(findProduct, req.query.lang, 'productTitle');
     const filteredAbout = filterByLangSingle(filteredTitle, req.query.lang, 'about');
     const filteredAd = filterByLangSingle(filteredAbout, req.query.lang, 'advantages');
     const filteredDesc = filterByLangSingle(filteredAd, req.query.lang, 'description');
-
+    filteredDesc.category = {...filteredDesc.category._doc}
+    filteredDesc.category.categoryName = filteredDesc.category[`categoryName${field}`]
     return res.status(200).json({
       status: 200,
       data: filteredDesc

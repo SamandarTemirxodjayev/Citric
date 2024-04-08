@@ -6,7 +6,6 @@ exports.getAll = async (req, res) => {
     const orders = await Order.find()
       .skip((req.query.page - 1) * req.query.perPage)
       .limit(req.query.perPage);
-    console.log(orders)
     const total = await Order.countDocuments();
     return res.status(200).json({
       status: 200,
@@ -59,7 +58,6 @@ exports.addOrder = async (req, res) => {
       message: "New order accepted"
     })
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       message: "Internal Server Error!",
       error: err.message,
