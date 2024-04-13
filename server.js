@@ -6,6 +6,7 @@ const cors = require("cors");
 const routes = require("./routes/router");
 const fs = require("fs");
 const useragent = require('express-useragent');
+const video = require("./video")
 const path = require("path");
 require("./backup");
 const PORT = process.env.PORT || 3001;
@@ -53,4 +54,7 @@ mongoose.set("debug", (collectionName, method, query, doc) => {
 
 app.use(routes);
 app.use("/uploads", express.static("uploads"));
+
+app.get("/video/:video", video);
+
 app.listen(PORT, () => console.log(`server is running ${PORT}`));

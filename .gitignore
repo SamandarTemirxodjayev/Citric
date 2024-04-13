@@ -6,6 +6,7 @@ node_modules/
 
 # Backups
 backups/
+backup/
 
 # Log files
 logs/
